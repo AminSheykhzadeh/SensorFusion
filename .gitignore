@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+*.hex
+*.elf
+*.bin
+*.o
+*.d
+.DS_Store
+build/
+
