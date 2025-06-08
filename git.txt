@@ -1,0 +1,3 @@
+git add .
+git commit -m "Organized all sketches into individual folders"
+git push
