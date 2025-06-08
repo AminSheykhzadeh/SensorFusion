@@ -1,0 +1,12 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+#dataDisplay {
+  margin: 20px;
+  font-size: 20px;
+}
+#chartContainer {
+  width: 80%;
+  margin: auto;
+}
