@@ -1,0 +1,6 @@
+Not enough space:
+
+Sketch too big for esp32; see https://support.arduino.cc/hc/en-us/articles/360013825179 for tips on reducing it.
+text section exceeds available space in board
+
+Compilation error: text section exceeds available space in board

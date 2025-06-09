@@ -5,16 +5,16 @@
 #include <ArduinoJson.h>
 
 // WiFi credentials
-const char* ssid = "YourWiFiSSID"; // Replace with your WiFi SSID
-const char* password = "YourWiFiPassword"; // Replace with your WiFi password
+const char* ssid = "AminJoon";      // Replace with your WiFi SSID
+const char* password = "12345678";  // Replace with your WiFi password
 
 BluetoothSerial SerialBT;
 WebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(81);
 
 String receivedData = "";
-const int maxDataPoints = 50; // Number of data points to display on the chart
-float dataValues[maxDataPoints] = {0}; // Array to store data for plotting
+const int maxDataPoints = 50;             // Number of data points to display on the chart
+float dataValues[maxDataPoints] = { 0 };  // Array to store data for plotting
 int dataIndex = 0;
 
 // HTML page with Chart.js for plotting
@@ -69,7 +69,7 @@ void handleRoot() {
   server.send(200, "text/html", htmlPage);
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
   if (type == WStype_TEXT) {
     // Handle WebSocket messages if needed
   }
@@ -77,7 +77,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
 void setup() {
   Serial.begin(115200);
-  SerialBT.begin("ESP32_Bluetooth"); // Bluetooth device name
+  SerialBT.begin("ESP32_Bluetooth");  // Bluetooth device name
   Serial.println("Bluetooth Started. Pair with ESP32_Bluetooth");
 
   // Connect to WiFi
@@ -106,7 +106,7 @@ void loop() {
     receivedData.trim();
     if (receivedData.length() > 0) {
       Serial.println("Received: " + receivedData);
-      
+
       // Try to parse the received data as a float
       float value = receivedData.toFloat();
       dataValues[dataIndex % maxDataPoints] = value;
