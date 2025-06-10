@@ -11,10 +11,11 @@ A simple Arduino-based Sensor Fusion project combining data from multiple sensor
 
 ## 📁 Project Structure
 
+```
 my-sketch/
-├── my-sketch.ino # Main Arduino sketch
-├── fusion.h / fusion.cpp # (Optional) Fusion algorithm implementation
-└── README.md # This file
+├── my-sketch.ino                # Main Arduino sketch
+├── fusion.h / fusion.cpp        # (Optional) Fusion algorithm implementation
+└── README.md                    # This file
 
 SensorFusion/
 ├── LICENSE
@@ -33,6 +34,8 @@ SensorFusion/
     └── CustomIMU/
         ├── CustomIMU.h
         └── CustomIMU.cpp
+```
+
 
 
 ## 📁 Available Sketches
