@@ -1,0 +1,2 @@
+Sending sd content and fonts to sd-card to surfe the web (webApp) from sd-card
+
