@@ -1,0 +1,19 @@
+fixed:
+1-server is working now
+2-web from sd is working
+3-
+
+problems:
+1-not showing plot
+2-
+3-
+
+new features added:
+1-
+2-
+3-
+
+future plan:
+1-
+2-
+3-
