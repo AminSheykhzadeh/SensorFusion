@@ -1,10 +1,10 @@
 fixed:
 1-server is working now
 2-web from sd is working
-3-
+3-index.html file in sd card solved but not working with separate files (/script.js /styles.css ...)
 
 problems:
-1-not showing plot
+1-not showing plot -> error was from html file and needed to be fixed :"
 2-
 3-
 

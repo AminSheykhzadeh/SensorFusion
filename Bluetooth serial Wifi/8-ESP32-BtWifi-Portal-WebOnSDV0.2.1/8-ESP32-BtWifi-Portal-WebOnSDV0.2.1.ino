@@ -1,4 +1,7 @@
-//working
+//mission : make Bluetooth work again..
+  //to do:
+    // - eather use hspi or 2000ms dela
+  // comment :   SerialBT.begin("ESP32_Bluetooth");  // Bluetooth device name
 
 #include <BluetoothSerial.h>
 #include <WiFi.h>
@@ -184,6 +187,85 @@ void handleChartJS() {
   file.close();
 }
 
+// Bluetooth connection callback
+void bluetoothCallback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
+  if (event == ESP_SPP_SRV_OPEN_EVT) {
+    bluetoothConnected = true;
+    Serial.println("Bluetooth Client Connected");
+    
+    // Broadcast Bluetooth connection status
+    DynamicJsonDocument doc(200);
+    doc["type"] = "connection";
+    doc["device"] = "bluetooth";
+    doc["message"] = "Bluetooth Connected";
+    doc["connected"] = true;
+    String json;
+    serializeJson(doc, json);
+    webSocket.broadcastTXT(json);
+  } else if (event == ESP_SPP_CLOSE_EVT) {
+    bluetoothConnected = false;
+    Serial.println("Bluetooth Client Disconnected");
+    
+    // Broadcast Bluetooth disconnection status
+    DynamicJsonDocument doc(200);
+    doc["type"] = "connection";
+    doc["device"] = "bluetooth";
+    doc["message"] = "Bluetooth Disconnected";
+    doc["connected"] = false;
+    String json;
+    serializeJson(doc, json);
+    webSocket.broadcastTXT(json);
+  }
+}
+
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
+  switch (type) {
+    case WStype_CONNECTED: {
+      connectedWebSocketClients++;
+      Serial.printf("WebSocket Client %u connected from %s\n", num, webSocket.remoteIP(num).toString().c_str());
+      
+      // Send WebSocket connection status to all clients
+      DynamicJsonDocument doc(200);
+      doc["type"] = "connection";
+      doc["device"] = "websocket";
+      doc["message"] = String("WebSocket Clients Connected: ") + connectedWebSocketClients;
+      doc["connected"] = true;
+      String json;
+      serializeJson(doc, json);
+      webSocket.broadcastTXT(json);
+
+      // Send current Bluetooth status to the new client
+      DynamicJsonDocument btDoc(200);
+      btDoc["type"] = "connection";
+      btDoc["device"] = "bluetooth";
+      btDoc["message"] = bluetoothConnected ? "Bluetooth Connected" : "Bluetooth Disconnected";
+      btDoc["connected"] = bluetoothConnected;
+      String btJson;
+      serializeJson(btDoc, btJson);
+      webSocket.sendTXT(num, btJson); // Send only to the new client
+      break;
+    }
+    case WStype_DISCONNECTED: {
+      connectedWebSocketClients--;
+      Serial.printf("WebSocket Client %u disconnected\n", num);
+      
+      // Broadcast WebSocket disconnection status
+      DynamicJsonDocument doc(200);
+      doc["type"] = "connection";
+      doc["device"] = "websocket";
+      doc["message"] = connectedWebSocketClients > 0 ? String("WebSocket Clients Connected: ") + connectedWebSocketClients : "No WebSocket Clients Connected";
+      doc["connected"] = connectedWebSocketClients > 0;
+      String json;
+      serializeJson(doc, json);
+      webSocket.broadcastTXT(json);
+      break;
+    }
+    case WStype_TEXT:
+      // Handle other WebSocket messages if needed
+      break;
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   delay(300);
@@ -218,10 +300,47 @@ void setup() {
   // Start server
   server.begin();
   Serial.println("HTTP server started.");
+  
+  // Start websocket
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvent);
+  delay(300);
+  
+  // Start bluetooth
+  Serial.println("starting bluetooth...");
+  delay(2222);
+  // SerialBT.begin("ESP32_Bluetooth");  // Bluetooth device name
+  SerialBT.register_callback(bluetoothCallback); // Register Bluetooth callback
+  Serial.println("Bluetooth Started. Pair with ESP32_Bluetooth");
+  delay(300);
 }
 
 void loop() {
   server.handleClient();
+  webSocket.loop();
+
+  // Handle Bluetooth data
+  if (SerialBT.available()) {
+    receivedData = SerialBT.readStringUntil('\n');
+    receivedData.trim();
+    if (receivedData.length() > 0) {
+      Serial.println("Received: " + receivedData);
+
+      // Try to parse the received data as a float
+      float value = receivedData.toFloat();
+      dataValues[dataIndex % maxDataPoints] = value;
+      dataIndex++;
+
+      // Send data to WebSocket clients
+      DynamicJsonDocument doc(200);
+      doc["index"] = dataIndex;
+      doc["value"] = value;
+      String json;
+      serializeJson(doc, json);
+      webSocket.broadcastTXT(json);
+    }
+  }
+
 }
 
 
