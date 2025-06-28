@@ -1,0 +1,19 @@
+fixed:
+1-sd in now on HSPI and bt/wifi/sd working fine
+2-
+3-
+
+problems:
+1-upload need reboot ?! and gets error everytime
+2-
+3-
+
+new features added:
+1-added file manager to project
+2-features : (Upload, Download, Delete, Rename, List files)
+3-
+
+future plan:
+1-create remove folder and upload/download to/from it
+2-
+3-

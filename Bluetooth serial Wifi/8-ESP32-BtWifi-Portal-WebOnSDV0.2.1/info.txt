@@ -1,19 +1,19 @@
 fixed:
-1-
-2-
+1-showing plot now
+2-js css and ... are working fine
 3-
 
 problems:
-1-
+1-bt and sd not working at same time (may there is an error with VSPI)
 2-
 3-
 
 new features added:
-1-
+1-all js and css files are on html file now (its more embedded but less pro :) )
 2-
 3-
 
 future plan:
-1-
-2-
-3-
+1-fix sd
+2-fix bt
+3-add filemanager to prj
