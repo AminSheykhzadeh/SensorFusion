@@ -15,5 +15,5 @@ new features added:
 
 future plan:
 1-create remove folder and upload/download to/from it
-2-
+2-move filemanager to sd-card
 3-
